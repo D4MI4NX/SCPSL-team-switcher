@@ -10,7 +10,7 @@ namespace TeamSwitcher
         
         public override string Author => "D4MI4NX";
         
-        public override Version Version => new(0, 1, 0);
+        public override Version Version => new(1, 0, 0);
         
         public override Version RequiredExiledVersion => new(8, 9, 11);
 
