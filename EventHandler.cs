@@ -7,8 +7,27 @@ namespace TeamSwitcher
     {
         private readonly TeamSwitcher ts = pluginInstance;
 
+        private readonly Dictionary<PlayerRoles.RoleTypeId, PlayerRoles.RoleTypeId> mtf2Chaos = new()
+        {
+            {PlayerRoles.RoleTypeId.FacilityGuard, PlayerRoles.RoleTypeId.ChaosConscript},
+        };
+
+        private readonly Dictionary<PlayerRoles.RoleTypeId, PlayerRoles.RoleTypeId> chaos2Mtf = new()
+        {
+            {PlayerRoles.RoleTypeId.ChaosConscript, PlayerRoles.RoleTypeId.NtfSpecialist},
+            {PlayerRoles.RoleTypeId.ChaosRifleman, PlayerRoles.RoleTypeId.NtfPrivate},
+            {PlayerRoles.RoleTypeId.ChaosMarauder, PlayerRoles.RoleTypeId.NtfSergeant},
+            {PlayerRoles.RoleTypeId.ChaosRepressor, PlayerRoles.RoleTypeId.NtfCaptain},
+        };
+
         public void Start()
         {
+            // Reverse chaos2Mtf dictionary
+            foreach (var entry in chaos2Mtf)
+            {
+                mtf2Chaos[entry.Value] = entry.Key;
+            }
+
             Players.Escaping += OnEscaping;
         }
 
@@ -19,13 +38,30 @@ namespace TeamSwitcher
 
         public void OnEscaping(EscapingEventArgs ev)
         {
-            if (ts.Config.GuardsBecomeMtf)
+            if (
+                ts.Config.GuardsBecomeMtf &&
+                ev.Player.Role == PlayerRoles.RoleTypeId.FacilityGuard &&
+                ev.Player.Cuffer == null
+            )
             {
-                if (ev.Player.Role == PlayerRoles.RoleTypeId.FacilityGuard)
-                {
-                    ev.NewRole = PlayerRoles.RoleTypeId.NtfPrivate;
-                    ev.IsAllowed = true;
-                }
+                ev.NewRole = PlayerRoles.RoleTypeId.NtfPrivate;
+                ev.IsAllowed = true;
+            }
+
+            if (ev.Player.Cuffer == null)
+            {
+                return;
+            }
+
+            ev.IsAllowed = true;
+
+            if (ev.Player.Role.Team == PlayerRoles.Team.FoundationForces)
+            {
+                ev.NewRole = mtf2Chaos[ev.Player.Role];
+            }
+            else if (ev.Player.Role.Team == PlayerRoles.Team.ChaosInsurgency)
+            {
+                ev.NewRole = chaos2Mtf[ev.Player.Role];
             }
         }
     }
