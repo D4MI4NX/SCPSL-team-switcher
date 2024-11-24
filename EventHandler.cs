@@ -53,15 +53,16 @@ namespace TeamSwitcher
                 return;
             }
 
-            ev.IsAllowed = true;
-
-            if (ev.Player.Role.Team == PlayerRoles.Team.FoundationForces)
+            if (ev.Player.Role.Team == PlayerRoles.Team.FoundationForces && ts.Config.MtfBecomeChaos)
             {
                 ev.NewRole = mtf2Chaos[ev.Player.Role];
+                ev.IsAllowed = true;
             }
-            else if (ev.Player.Role.Team == PlayerRoles.Team.ChaosInsurgency)
+
+            if (ev.Player.Role.Team == PlayerRoles.Team.ChaosInsurgency && ts.Config.ChaosBecomesMtf)
             {
                 ev.NewRole = chaos2Mtf[ev.Player.Role];
+                ev.IsAllowed = true;
             }
         }
     }
