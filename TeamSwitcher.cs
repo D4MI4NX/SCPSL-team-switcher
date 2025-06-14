@@ -10,9 +10,9 @@ namespace TeamSwitcher
         
         public override string Author => "D4MI4NX";
         
-        public override Version Version => new(1, 0, 0);
+        public override Version Version => new(1, 1, 0);
         
-        public override Version RequiredExiledVersion => new(8, 9, 11);
+        public override Version RequiredExiledVersion => new(9, 6, 1);
 
 
         public GenHandler Handler { get; private set; }

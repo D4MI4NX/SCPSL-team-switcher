@@ -1,3 +1,5 @@
+using Exiled.API.Enums;
+using Exiled.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Players = Exiled.Events.Handlers.Player;
 
@@ -44,8 +46,10 @@ namespace TeamSwitcher
                 ev.Player.Cuffer == null
             )
             {
+                ev.EscapeScenario = EscapeScenario.CustomEscape;
                 ev.NewRole = PlayerRoles.RoleTypeId.NtfPrivate;
                 ev.IsAllowed = true;
+                Log.Debug(string.Format("{0} escaped as {1}", ev.Player.Nickname, ev.NewRole));
             }
 
             if (ev.Player.Cuffer == null)
@@ -55,14 +59,18 @@ namespace TeamSwitcher
 
             if (ev.Player.Role.Team == PlayerRoles.Team.FoundationForces && ts.Config.MtfBecomeChaos)
             {
+                ev.EscapeScenario = EscapeScenario.CustomEscape;
                 ev.NewRole = mtf2Chaos[ev.Player.Role];
                 ev.IsAllowed = true;
+                Log.Debug(string.Format("{0} escaped as {1}", ev.Player.Nickname, ev.NewRole));
             }
 
             if (ev.Player.Role.Team == PlayerRoles.Team.ChaosInsurgency && ts.Config.ChaosBecomesMtf)
             {
+                ev.EscapeScenario = EscapeScenario.CustomEscape;
                 ev.NewRole = chaos2Mtf[ev.Player.Role];
                 ev.IsAllowed = true;
+                Log.Debug(string.Format("{0} escaped as {1}", ev.Player.Nickname, ev.NewRole));
             }
         }
     }
